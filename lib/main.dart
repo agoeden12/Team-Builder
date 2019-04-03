@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_builder/select_players.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,14 +25,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
- 
+
+  _goToSelectPlayers(){
+    setState(() {
+      Route route = MaterialPageRoute(builder: (context) => SelectPlayers());
+      Navigator.push(context, route);
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(),
+      body: Center(
+        child: RaisedButton(
+          child: Text('Choose Players'),
+          onPressed: () => _goToSelectPlayers(),
+        ),
+      ),
     );
   }
 }
