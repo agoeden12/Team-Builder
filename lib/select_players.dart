@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-enum ConfirmAction { CANCEL, ACCEPT }
+import 'teams_screen.dart';
 
 class SelectPlayers extends StatefulWidget {
   @override
@@ -27,7 +26,7 @@ class _SelectPlayersState extends State<SelectPlayers> {
       body: new Stack(
         children: <Widget>[
           _createPlayersList(),
-          _shuffleButton(),
+          _createTeamsButton(),
         ],
       ),
     );
@@ -130,13 +129,18 @@ class _SelectPlayersState extends State<SelectPlayers> {
         });
   }
 
-//Shuffle players button ---------------------------------------------------------------------------------------------
+// Go to teams screen ------------------------------------------------------------------------------------------------
 
   // Navigation to the teams screen passing through the saved list
-  _goToTeamsScreen() {}
+  _goToTeamsScreen() {
+    setState(() {
+      Route route = MaterialPageRoute(builder: (context) => TeamsScreen(totalPlayers: _savedPlayers,));
+      Navigator.push(context, route); 
+    });
+  }
 
   // Raised button to go to the teams screen
-  Widget _shuffleButton() {
+  Widget _createTeamsButton() {
     return new Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
