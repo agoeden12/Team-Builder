@@ -80,7 +80,7 @@ class _SelectPlayersState extends State<SelectPlayers> {
           if (snapshot.hasData) {
             _players = snapshot.data.getStringList('playerNames');
             return ListView.builder(
-              padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
               itemCount: _players.length,
               itemBuilder: (context, i) {
                 return new Dismissible(
@@ -134,8 +134,11 @@ class _SelectPlayersState extends State<SelectPlayers> {
   // Navigation to the teams screen passing through the saved list
   _goToTeamsScreen() {
     setState(() {
-      Route route = MaterialPageRoute(builder: (context) => TeamsScreen(totalPlayers: _savedPlayers,));
-      Navigator.push(context, route); 
+      Route route = MaterialPageRoute(
+          builder: (context) => TeamsScreen(
+                totalPlayers: _savedPlayers,
+              ));
+      Navigator.push(context, route);
     });
   }
 
@@ -144,7 +147,7 @@ class _SelectPlayersState extends State<SelectPlayers> {
     return new Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.all(12.0),
+        padding: EdgeInsets.all(12),
         child: new RaisedButton(
           color: Theme.of(context).primaryColor,
           shape: RoundedRectangleBorder(
@@ -184,15 +187,18 @@ class _SelectPlayersState extends State<SelectPlayers> {
                 ),
               ),
               new IconButton(
-                icon: Icon(Icons.add),
-                disabledColor: Colors.black54,
-                onPressed:
-                    (playerName.length != 0 && !_players.contains(playerName))
-                        ? () {
-                            _createNewPlayer(playerName);
-                            Navigator.of(context).pop();
-                          }
-                        : () {},
+                icon: Icon(
+                  Icons.add,
+                  color: Theme.of(context).primaryColor,
+                ),
+                onPressed: (!_players.contains(playerName))
+                    ? () {
+                        if (playerName.length != 0) {
+                          _createNewPlayer(playerName);
+                        }
+                        Navigator.of(context).pop();
+                      }
+                    : () {},
               ),
             ],
           ),

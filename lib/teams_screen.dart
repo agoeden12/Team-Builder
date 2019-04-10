@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'display_team.dart';
 
 class TeamsScreen extends StatefulWidget {
   final List<String> totalPlayers;
@@ -13,7 +14,8 @@ class TeamsScreen extends StatefulWidget {
 
 class _TeamsScreenState extends State<TeamsScreen> {
   List<String> totalPlayers;
-  List<String> teamOne, teamTwo;
+  List<String> teamOne = new List<String>();
+  List<String> teamTwo = new List<String>();
 
   @override
   void initState() {
@@ -70,66 +72,41 @@ class _TeamsScreenState extends State<TeamsScreen> {
     double _height = MediaQuery.of(context).size.height;
     return Stack(
       children: <Widget>[
-        _buildTeam(totalPlayers, _height, _width / 2, Colors.red[100],
-            Alignment.topLeft, true),
-        _buildTeam(totalPlayers, _height, _width / 2, Colors.blue[100],
-            Alignment.topRight, false),
+        new DisplayTeam(
+          'Red Team',
+          teamNames: teamOne,
+          teamColorPrimary: Colors.red[100],
+          teamColorSecondary: Colors.red[800],
+          height: _height,
+          width: _width / 2,
+          pageAlignment: Alignment.topLeft,
+        ),
+        new DisplayTeam(
+          'Blue Team',
+          teamNames: teamTwo,
+          teamColorPrimary: Colors.blue[100],
+          teamColorSecondary: Colors.blue[800],
+          height: _height,
+          width: _width / 2,
+          pageAlignment: Alignment.topRight,
+        ),
         _shuffleButton(),
       ],
     );
   }
 
-  Widget _buildTeam(List<String> teamNames, double _height, double _width,
-      Color teamColor, Alignment pageAlignment, bool isRed) {
-    return Align(
-      alignment: pageAlignment,
-      child: Container(
-        color: teamColor,
-        height: _height,
-        width: _width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(12),
-              child: Text(
-                isRed ? 'Red Team' : 'Blue Team',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: isRed ? Colors.red[800] : Colors.blue[800],
-                  fontSize: 22,
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: teamNames.length,
-                itemBuilder: (context, i) {
-                  return Padding(
-                    padding: EdgeInsets.fromLTRB(18, 4, 12, 4),
-                    child: Text(
-                      teamNames[i],
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   _shuffleTeams() {
-    totalPlayers.shuffle();
-    for (int index; index < totalPlayers.length/2; index++){
-      
-    }
+    setState(() {
+      totalPlayers.shuffle();
+      teamOne.removeRange(0, teamOne.length);
+      teamTwo.removeRange(0, teamTwo.length);
+      for (int index = 0; index < totalPlayers.length ~/ 2; index++) {
+        teamOne.add(totalPlayers[index]);
+      }
+      for (int index = totalPlayers.length ~/ 2; index < totalPlayers.length; index++) {
+        teamTwo.add(totalPlayers[index]);
+      }
+    });
   }
 
   Widget _shuffleButton() {
@@ -145,7 +122,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
             'Shuffle Teams',
             style: TextStyle(color: Theme.of(context).primaryColor),
           ),
-          onPressed: () => _shuffleTeams,
+          onPressed: () => _shuffleTeams(),
         ),
       ),
     );
