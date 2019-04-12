@@ -3,10 +3,13 @@ import 'display_team.dart';
 
 class TeamsScreen extends StatefulWidget {
   final List<String> totalPlayers;
+  final int numberOfTeams;
 
   TeamsScreen({
     this.totalPlayers,
-  }) : assert(totalPlayers != null);
+    this.numberOfTeams,
+  })  : assert(totalPlayers != null),
+        assert(numberOfTeams != null);
 
   @override
   _TeamsScreenState createState() => _TeamsScreenState();
@@ -14,18 +17,21 @@ class TeamsScreen extends StatefulWidget {
 
 class _TeamsScreenState extends State<TeamsScreen> {
   List<String> totalPlayers;
-  List<String> teamOne = new List<String>();
-  List<String> teamTwo = new List<String>();
+  double _height, _width;
+  int _numberOfTeams;
 
   @override
   void initState() {
     super.initState();
     totalPlayers = widget.totalPlayers;
+    _numberOfTeams = widget.numberOfTeams;
     _shuffleTeams();
   }
 
   @override
   Widget build(BuildContext context) {
+    _height = MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
+    _width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: _appBar(),
       body: _showTeams(),
@@ -68,44 +74,135 @@ class _TeamsScreenState extends State<TeamsScreen> {
 
   // Main body widget which is called by the scaffold
   Widget _showTeams() {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
     return Stack(
       children: <Widget>[
-        new DisplayTeam(
-          'Red Team',
-          teamNames: teamOne,
-          teamColorPrimary: Colors.red[100],
-          teamColorSecondary: Colors.red[800],
-          height: _height,
-          width: _width / 2,
-          pageAlignment: Alignment.topLeft,
-        ),
-        new DisplayTeam(
-          'Blue Team',
-          teamNames: teamTwo,
-          teamColorPrimary: Colors.blue[100],
-          teamColorSecondary: Colors.blue[800],
-          height: _height,
-          width: _width / 2,
-          pageAlignment: Alignment.topRight,
-        ),
+        createTeamDisplays(),
         _shuffleButton(),
       ],
     );
   }
 
+  Widget createTeamDisplays() {
+    switch (_numberOfTeams) {
+      case 2:
+        int listSections = totalPlayers.length ~/ 2;
+        List teamOne = totalPlayers.sublist(0, listSections);
+        List teamTwo = totalPlayers.sublist(listSections, totalPlayers.length);
+        return Stack(children: <Widget>[
+          new DisplayTeam(
+            'Red Team',
+            teamNames: teamOne,
+            teamColorPrimary: Colors.red[100],
+            teamColorSecondary: Colors.red[800],
+            height: _height,
+            width: _width / 2,
+            pageAlignment: Alignment.topLeft,
+          ),
+          new DisplayTeam(
+            'Blue Team',
+            teamNames: teamTwo,
+            teamColorPrimary: Colors.blue[100],
+            teamColorSecondary: Colors.blue[800],
+            height: _height,
+            width: _width / 2,
+            pageAlignment: Alignment.topRight,
+          ),
+        ]);
+        break;
+
+      case 3:
+        int listSections = totalPlayers.length ~/ 3;
+        List teamOne = totalPlayers.sublist(0, listSections);
+        List teamTwo = totalPlayers.sublist(listSections, listSections * 2);
+        List teamThree =
+            totalPlayers.sublist(listSections * 2, totalPlayers.length);
+        return Stack(children: <Widget>[
+          new DisplayTeam(
+            'Red Team',
+            teamNames: teamOne,
+            teamColorPrimary: Colors.red[100],
+            teamColorSecondary: Colors.red[800],
+            height: _height / 2,
+            width: _width / 2,
+            pageAlignment: Alignment.topLeft,
+          ),
+          new DisplayTeam(
+            'Blue Team',
+            teamNames: teamTwo,
+            teamColorPrimary: Colors.blue[100],
+            teamColorSecondary: Colors.blue[800],
+            height: _height / 2,
+            width: _width / 2,
+            pageAlignment: Alignment.topRight,
+          ),
+          new DisplayTeam(
+            'Green Team',
+            teamNames: teamThree,
+            teamColorPrimary: Colors.green[100],
+            teamColorSecondary: Colors.green[800],
+            height: _height / 2,
+            width: _width,
+            pageAlignment: Alignment.bottomCenter,
+          ),
+        ]);
+        break;
+
+      case 4:
+        int listSections = totalPlayers.length ~/ 4;
+        List teamOne = totalPlayers.sublist(0, listSections);
+        List teamTwo = totalPlayers.sublist(listSections, listSections * 2);
+        List teamThree =
+            totalPlayers.sublist(listSections * 2, listSections * 3);
+        List teamFour =
+            totalPlayers.sublist(listSections * 3, totalPlayers.length);
+        return Stack(children: <Widget>[
+          new DisplayTeam(
+            'Red Team',
+            teamNames: teamOne,
+            teamColorPrimary: Colors.red[100],
+            teamColorSecondary: Colors.red[800],
+            height: _height / 2,
+            width: _width / 2,
+            pageAlignment: Alignment.topLeft,
+          ),
+          new DisplayTeam(
+            'Blue Team',
+            teamNames: teamTwo,
+            teamColorPrimary: Colors.blue[100],
+            teamColorSecondary: Colors.blue[800],
+            height: _height / 2,
+            width: _width / 2,
+            pageAlignment: Alignment.topRight,
+          ),
+          new DisplayTeam(
+            'Green Team',
+            teamNames: teamThree,
+            teamColorPrimary: Colors.green[100],
+            teamColorSecondary: Colors.green[800],
+            height: _height / 2,
+            width: _width / 2,
+            pageAlignment: Alignment.bottomLeft,
+          ),
+          new DisplayTeam(
+            'Purple Team',
+            teamNames: teamFour,
+            teamColorPrimary: Colors.purple[100],
+            teamColorSecondary: Colors.purple[800],
+            height: _height / 2,
+            width: _width / 2,
+            pageAlignment: Alignment.bottomRight,
+          ),
+        ]);
+        break;
+
+      default:
+        return Container();
+    }
+  }
+
   _shuffleTeams() {
     setState(() {
       totalPlayers.shuffle();
-      teamOne.removeRange(0, teamOne.length);
-      teamTwo.removeRange(0, teamTwo.length);
-      for (int index = 0; index < totalPlayers.length ~/ 2; index++) {
-        teamOne.add(totalPlayers[index]);
-      }
-      for (int index = totalPlayers.length ~/ 2; index < totalPlayers.length; index++) {
-        teamTwo.add(totalPlayers[index]);
-      }
     });
   }
 

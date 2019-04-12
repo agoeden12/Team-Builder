@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'teams_screen.dart';
 
 class SelectPlayers extends StatefulWidget {
+  final int numberOfTeams;
+
+  SelectPlayers({
+    @required this.numberOfTeams,
+  })  : assert(numberOfTeams != null);
+
   @override
   _SelectPlayersState createState() => _SelectPlayersState();
 }
@@ -133,13 +140,24 @@ class _SelectPlayersState extends State<SelectPlayers> {
 
   // Navigation to the teams screen passing through the saved list
   _goToTeamsScreen() {
+    int numberOfTeams = widget.numberOfTeams;
+    if (_savedPlayers.length >= numberOfTeams){
     setState(() {
       Route route = MaterialPageRoute(
           builder: (context) => TeamsScreen(
                 totalPlayers: _savedPlayers,
+                numberOfTeams: numberOfTeams,
               ));
       Navigator.push(context, route);
-    });
+    });}
+    else {
+      Fluttertoast.showToast(
+        msg: "You need to select at least $numberOfTeams players.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+      );
+    }
   }
 
   // Raised button to go to the teams screen
