@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:team_builder/select_players.dart';
 import 'package:share/share.dart';
+// import 'package:firebase_admob/firebase_admob.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,6 +25,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  // FirebaseAdMob adMob = FirebaseAdMob.instance.initialize(appId: ca-app-pub-3307735555687835~1516596922);
+
+  // MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+  // keywords: <String>['flutterio', 'beautiful apps'],
+  // contentUrl: 'https://flutter.io',
+  // birthday: DateTime.now(),
+  // childDirected: false,
+  // designedForFamilies: false,
+  // gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
+  // testDevices: <String>[], // Android emulators are considered test devices
+  // );
+
+  // BannerAd myBanner = BannerAd(
+  // // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+  // // https://developers.google.com/admob/android/test-ads
+  // // https://developers.google.com/admob/ios/test-ads
+  // adUnitId: ca-app-pub-3307735555687835/2254963528,
+  // size: AdSize.smartBanner,
+  // targetingInfo: targetingInfo,
+  // listener: (MobileAdEvent event) {
+  //   print("BannerAd event is $event");
+  // },
+  // );
+
   _goToSelectPlayers(int numberOfTeams) {
     setState(() {
       Route route = MaterialPageRoute(
@@ -82,7 +108,16 @@ class _MyHomePageState extends State<MyHomePage> {
               _createButton(4),
             ],
           ),
-        )
+        ),
+  //       myBanner
+  // // typically this happens well before the ad is shown
+  // ..load()
+  // ..show(
+  //   // Positions the banner ad 60 pixels from the bottom of the screen
+  //   anchorOffset: 60.0,
+  //   // Banner Position
+  //   anchorType: AnchorType.bottom,
+  // );
       ],
     );
   }

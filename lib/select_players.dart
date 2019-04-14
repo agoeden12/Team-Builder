@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'teams_screen.dart';
 
 class SelectPlayers extends StatefulWidget {
@@ -8,7 +9,7 @@ class SelectPlayers extends StatefulWidget {
 
   SelectPlayers({
     @required this.numberOfTeams,
-  })  : assert(numberOfTeams != null);
+  }) : assert(numberOfTeams != null);
 
   @override
   _SelectPlayersState createState() => _SelectPlayersState();
@@ -21,8 +22,6 @@ class _SelectPlayersState extends State<SelectPlayers> {
   // Saving the @_players list to SharedPreferences
   _save() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _players = (prefs.getStringList('playerNames') ?? List<String>());
-    print('Your list  $_players');
     await prefs.setStringList('playerNames', _players);
   }
 
@@ -81,11 +80,11 @@ class _SelectPlayersState extends State<SelectPlayers> {
 
   // Wait for the shared preferences to retrieve data and then build out the listview of names
   Widget _createPlayersList() {
-    return StreamBuilder<SharedPreferences>(
+    return StreamBuilder(
         stream: SharedPreferences.getInstance().asStream(),
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
-            _players = snapshot.data.getStringList('playerNames');
+            _players = snapshot.data.getStringList('playerNames') != null ? snapshot.data.getStringList('playerNames') : new List();
             return ListView.builder(
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
               itemCount: _players.length,
@@ -97,9 +96,7 @@ class _SelectPlayersState extends State<SelectPlayers> {
                     if (_savedPlayers.contains(_players[i]))
                       _savedPlayers.remove(_players[i]);
                     _players.remove(_players[i]);
-
-                    print(_players);
-                    print(_savedPlayers);
+                    _save();
                   },
                   child: _addPlayerToList(
                     _players[i],
@@ -141,16 +138,16 @@ class _SelectPlayersState extends State<SelectPlayers> {
   // Navigation to the teams screen passing through the saved list
   _goToTeamsScreen() {
     int numberOfTeams = widget.numberOfTeams;
-    if (_savedPlayers.length >= numberOfTeams){
-    setState(() {
-      Route route = MaterialPageRoute(
-          builder: (context) => TeamsScreen(
-                totalPlayers: _savedPlayers,
-                numberOfTeams: numberOfTeams,
-              ));
-      Navigator.push(context, route);
-    });}
-    else {
+    if (_savedPlayers.length >= numberOfTeams) {
+      setState(() {
+        Route route = MaterialPageRoute(
+            builder: (context) => TeamsScreen(
+                  totalPlayers: _savedPlayers,
+                  numberOfTeams: numberOfTeams,
+                ));
+        Navigator.push(context, route);
+      });
+    } else {
       Fluttertoast.showToast(
         msg: "You need to select at least $numberOfTeams players.",
         toastLength: Toast.LENGTH_SHORT,
