@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum ConfirmAction { CANCEL, ACCEPT }
+import 'teams_screen.dart';
 
 class SelectPlayers extends StatefulWidget {
+  final int numberOfTeams;
+
+  SelectPlayers({
+    @required this.numberOfTeams,
+  }) : assert(numberOfTeams != null);
+
   @override
   _SelectPlayersState createState() => _SelectPlayersState();
 }
@@ -15,8 +22,6 @@ class _SelectPlayersState extends State<SelectPlayers> {
   // Saving the @_players list to SharedPreferences
   _save() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _players = (prefs.getStringList('playerNames') ?? List<String>());
-    print('Your list  $_players');
     await prefs.setStringList('playerNames', _players);
   }
 
@@ -27,7 +32,7 @@ class _SelectPlayersState extends State<SelectPlayers> {
       body: new Stack(
         children: <Widget>[
           _createPlayersList(),
-          _shuffleButton(),
+          _createTeamsButton(),
         ],
       ),
     );
@@ -75,13 +80,13 @@ class _SelectPlayersState extends State<SelectPlayers> {
 
   // Wait for the shared preferences to retrieve data and then build out the listview of names
   Widget _createPlayersList() {
-    return StreamBuilder<SharedPreferences>(
+    return StreamBuilder(
         stream: SharedPreferences.getInstance().asStream(),
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
-            _players = snapshot.data.getStringList('playerNames');
+            _players = snapshot.data.getStringList('playerNames') != null ? snapshot.data.getStringList('playerNames') : new List();
             return ListView.builder(
-              padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
               itemCount: _players.length,
               itemBuilder: (context, i) {
                 return new Dismissible(
@@ -91,9 +96,7 @@ class _SelectPlayersState extends State<SelectPlayers> {
                     if (_savedPlayers.contains(_players[i]))
                       _savedPlayers.remove(_players[i]);
                     _players.remove(_players[i]);
-
-                    print(_players);
-                    print(_savedPlayers);
+                    _save();
                   },
                   child: _addPlayerToList(
                     _players[i],
@@ -130,17 +133,36 @@ class _SelectPlayersState extends State<SelectPlayers> {
         });
   }
 
-//Shuffle players button ---------------------------------------------------------------------------------------------
+// Go to teams screen ------------------------------------------------------------------------------------------------
 
   // Navigation to the teams screen passing through the saved list
-  _goToTeamsScreen() {}
+  _goToTeamsScreen() {
+    int numberOfTeams = widget.numberOfTeams;
+    if (_savedPlayers.length >= numberOfTeams) {
+      setState(() {
+        Route route = MaterialPageRoute(
+            builder: (context) => TeamsScreen(
+                  totalPlayers: _savedPlayers,
+                  numberOfTeams: numberOfTeams,
+                ));
+        Navigator.push(context, route);
+      });
+    } else {
+      Fluttertoast.showToast(
+        msg: "You need to select at least $numberOfTeams players.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+      );
+    }
+  }
 
   // Raised button to go to the teams screen
-  Widget _shuffleButton() {
+  Widget _createTeamsButton() {
     return new Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.all(12.0),
+        padding: EdgeInsets.all(12),
         child: new RaisedButton(
           color: Theme.of(context).primaryColor,
           shape: RoundedRectangleBorder(
@@ -180,15 +202,18 @@ class _SelectPlayersState extends State<SelectPlayers> {
                 ),
               ),
               new IconButton(
-                icon: Icon(Icons.add),
-                disabledColor: Colors.black54,
-                onPressed:
-                    (playerName.length != 0 && !_players.contains(playerName))
-                        ? () {
-                            _createNewPlayer(playerName);
-                            Navigator.of(context).pop();
-                          }
-                        : () {},
+                icon: Icon(
+                  Icons.add,
+                  color: Theme.of(context).primaryColor,
+                ),
+                onPressed: (!_players.contains(playerName))
+                    ? () {
+                        if (playerName.length != 0) {
+                          _createNewPlayer(playerName);
+                        }
+                        Navigator.of(context).pop();
+                      }
+                    : () {},
               ),
             ],
           ),
