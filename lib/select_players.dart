@@ -6,9 +6,11 @@ import 'teams_screen.dart';
 
 class SelectPlayers extends StatefulWidget {
   final int numberOfTeams;
+  final List<String> savedPlayers;
 
   SelectPlayers({
     @required this.numberOfTeams,
+    this.savedPlayers,
   }) : assert(numberOfTeams != null);
 
   @override
@@ -18,6 +20,12 @@ class SelectPlayers extends StatefulWidget {
 class _SelectPlayersState extends State<SelectPlayers> {
   List<String> _players = new List();
   List<String> _savedPlayers = new List();
+
+  @override
+  void initState() {
+    super.initState();
+    _savedPlayers = widget.savedPlayers == null ? new List() : widget.savedPlayers;
+  }
 
   // Saving the @_players list to SharedPreferences
   _save() async {
@@ -128,7 +136,6 @@ class _SelectPlayersState extends State<SelectPlayers> {
             isSaved
                 ? _savedPlayers.remove(playerName)
                 : _savedPlayers.add(playerName);
-            print(_savedPlayers);
           });
         });
   }
@@ -145,7 +152,7 @@ class _SelectPlayersState extends State<SelectPlayers> {
                   totalPlayers: _savedPlayers,
                   numberOfTeams: numberOfTeams,
                 ));
-        Navigator.push(context, route);
+        Navigator.pushReplacement(context, route);
       });
     } else {
       Fluttertoast.showToast(

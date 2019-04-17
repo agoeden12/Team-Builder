@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'display_team.dart';
+import 'package:team_builder/select_players.dart';
 
 class TeamsScreen extends StatefulWidget {
   final List<String> totalPlayers;
@@ -40,8 +41,12 @@ class _TeamsScreenState extends State<TeamsScreen> {
 
   // When the close button is pressed, go back to the home screen
   _popUntilHomeScreen() {
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
+    Navigator.of(context).popUntil(ModalRoute.withName(Navigator.defaultRouteName));
+  }
+
+  _reselectPlayers() {
+    MaterialPageRoute newRoute = new MaterialPageRoute(builder: (context) => SelectPlayers(numberOfTeams: _numberOfTeams, savedPlayers: totalPlayers,),);
+    Navigator.of(context).push(newRoute);
   }
 
   // App Bar for the screen to control navigation
@@ -64,7 +69,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
         IconButton(
           icon: Icon(Icons.people),
           color: Theme.of(context).primaryColor,
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => _reselectPlayers(),
         )
       ],
     );
