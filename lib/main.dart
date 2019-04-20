@@ -1,31 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:team_builder/select_players.dart';
 import 'package:share/share.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
-
-final myColorScheme = new ColorScheme(
-  primary: Colors.blue,
-  primaryVariant: Colors.blue[300],
-  onPrimary: Colors.black,
-  secondary: Color.fromRGBO(237, 30, 121, 1),
-  secondaryVariant: Colors.pink[800],
-  onSecondary: Colors.black,
-  surface: Colors.black12,
-  onSurface: Colors.white30,
-  background: Colors.white,
-  onBackground: Colors.black12,
-  error: Colors.red,
-  onError: Colors.red,
-  brightness: Brightness.light,
-);
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Team Builder',
-      theme: ThemeData(colorScheme: myColorScheme, primarySwatch: Colors.blue),
+      theme: ThemeData(primarySwatch: Colors.pink),
       home: MyHomePage(title: 'Team Builder'),
       debugShowCheckedModeBanner: false,
     );
@@ -55,6 +40,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _showAppBar(),
@@ -70,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
         IconButton(
           icon: Icon(
             Icons.share,
-            color: Theme.of(context).colorScheme.primaryVariant,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           iconSize: 35.0,
           onPressed: () => _shareApp(),
@@ -79,7 +73,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  //TODO: change the share text
   _shareApp() {
     Share.share('text', sharePositionOrigin: Rect.fromLTWH(50, 50, 100, 100));
   }

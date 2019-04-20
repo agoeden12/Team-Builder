@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.teambuilder">
+    package="com.agoeden.teambuilder">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -8,7 +8,7 @@
         android:label="Team Builder"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name=".MainActivity"
+            android:name="com.agoeden.teambuilder.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
