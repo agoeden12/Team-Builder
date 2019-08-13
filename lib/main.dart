@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:team_builder/select_players.dart';
+import 'package:flutter/services.dart';
 import 'package:share/share.dart';
-// import 'package:firebase_admob/firebase_admob.dart';
+import 'package:team_builder/select_players.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,11 +10,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Team Builder',
-      theme: ThemeData(primarySwatch: Colors.cyan),
+      theme: ThemeData(primarySwatch: Colors.pink),
       home: MyHomePage(title: 'Team Builder'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
+
+final String logoAssetName = "assets/app_logo.png";
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -25,39 +28,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  // FirebaseAdMob adMob = FirebaseAdMob.instance.initialize(appId: ca-app-pub-3307735555687835~1516596922);
-
-  // MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-  // keywords: <String>['flutterio', 'beautiful apps'],
-  // contentUrl: 'https://flutter.io',
-  // birthday: DateTime.now(),
-  // childDirected: false,
-  // designedForFamilies: false,
-  // gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
-  // testDevices: <String>[], // Android emulators are considered test devices
-  // );
-
-  // BannerAd myBanner = BannerAd(
-  // // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-  // // https://developers.google.com/admob/android/test-ads
-  // // https://developers.google.com/admob/ios/test-ads
-  // adUnitId: ca-app-pub-3307735555687835/2254963528,
-  // size: AdSize.smartBanner,
-  // targetingInfo: targetingInfo,
-  // listener: (MobileAdEvent event) {
-  //   print("BannerAd event is $event");
-  // },
-  // );
-
   _goToSelectPlayers(int numberOfTeams) {
     setState(() {
       Route route = MaterialPageRoute(
-          builder: (context) => SelectPlayers(
-                numberOfTeams: numberOfTeams,
-              ));
+        builder: (context) => SelectPlayers(
+              numberOfTeams: numberOfTeams,
+            ),
+      );
       Navigator.push(context, route);
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   @override
@@ -76,9 +64,9 @@ class _MyHomePageState extends State<MyHomePage> {
         IconButton(
           icon: Icon(
             Icons.share,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).colorScheme.secondary,
           ),
-          iconSize: 30.0,
+          iconSize: 35.0,
           onPressed: () => _shareApp(),
         )
       ],
@@ -86,7 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _shareApp() {
-    Share.share('text', sharePositionOrigin: Rect.fromLTWH(50, 50, 100, 100));
+    Share.share(
+        'Check out this app that makes everything about creating teams much easier! https://play.google.com/store/apps/details?id=com.agoeden.teambuilder',
+        sharePositionOrigin: Rect.fromLTWH(50, 50, 100, 100));
   }
 
   Widget _showBody() {
@@ -94,11 +84,28 @@ class _MyHomePageState extends State<MyHomePage> {
       textDirection: TextDirection.ltr,
       children: <Widget>[
         Align(
-          alignment: Alignment(0, -0.5),
-          child: Text(widget.title),
+          alignment: Alignment(0, -0.75),
+          child: Image(
+            image: AssetImage(
+              logoAssetName,
+            ),
+            height: 300,
+            width: 300,
+            color: Theme.of(context).primaryColor,
+          ),
         ),
         Align(
-          alignment: Alignment(0, 0.25),
+          alignment: Alignment(0, 0.2),
+          child: Text(
+            'Select The Number Of Teams:',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.secondaryVariant,
+              fontSize: 24,
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment(0, 0.45),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
@@ -109,15 +116,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-  //       myBanner
-  // // typically this happens well before the ad is shown
-  // ..load()
-  // ..show(
-  //   // Positions the banner ad 60 pixels from the bottom of the screen
-  //   anchorOffset: 60.0,
-  //   // Banner Position
-  //   anchorType: AnchorType.bottom,
-  // );
       ],
     );
   }
@@ -131,9 +129,9 @@ class _MyHomePageState extends State<MyHomePage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).colorScheme.secondary,
         textColor: Colors.white,
-        splashColor: Theme.of(context).primaryColorLight,
+        splashColor: Theme.of(context).colorScheme.secondaryVariant,
         onPressed: () => _goToSelectPlayers(teamAmount),
         child: Text(
           '$teamAmount',

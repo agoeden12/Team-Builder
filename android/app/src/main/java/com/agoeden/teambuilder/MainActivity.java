@@ -1,4 +1,4 @@
-package com.example.teambuilder;
+package com.agoeden.teambuilder;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

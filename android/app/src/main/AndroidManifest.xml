@@ -1,23 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.andrewgoeden.teambuilder">
+    package="com.agoeden.teambuilder">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="team_builder"
+        android:label="Team Builder"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name=".MainActivity"
+            android:name="com.agoeden.teambuilder.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
             
-            <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3307735555687835~1516596922"/>
             <meta-data
                 android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
                 android:value="true" />
