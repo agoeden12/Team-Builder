@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:team_builder/select_players.dart';
-import 'package:share/share.dart';
 import 'package:flutter/services.dart';
+import 'package:share/share.dart';
+import 'package:team_builder/select_players.dart';
 
 void main() => runApp(MyApp());
 
@@ -74,7 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _shareApp() {
-    Share.share('text', sharePositionOrigin: Rect.fromLTWH(50, 50, 100, 100));
+    Share.share(
+        'Check out this app that makes everything about creating teams much easier! https://play.google.com/store/apps/details?id=com.agoeden.teambuilder',
+        sharePositionOrigin: Rect.fromLTWH(50, 50, 100, 100));
   }
 
   Widget _showBody() {
